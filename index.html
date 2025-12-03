@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Pratchett Clock</title>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            margin: 0px;
+            background-color: antiquewhite;
+        }
+
+        #words {
+            font-family: "EB Garamond";
+            font-weight: 400;
+            font-size: 5vw;
+            margin: 15vw;
+            margin-top: 5vw;
+            margin-bottom: 10vw;
+            text-align: center;
+        }
+
+        #time {
+            font-weight: 800;
+        }
+
+        #quote {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 2em;
+            float: right;
+            bottom: 5vh;
+            position: absolute;
+            right: 5vh;
+            z-index: 3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="words">
+        <q>Good <span id="dayBit"></span>!</q> He said brightly to the surprised imp. <q>What is the time please?</q>
+        <q>Er...
+            <span id="time"></span>, Insert Name Here,</q> said the imp.
+    </div>
+    <div id="quote">
+        -Terry Pratchett, <em>Thud!</em> (with some modification)
+    </div>
+</body>
+<script>
+    var hours = ["midnight", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "noon", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"]
+    var ones = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+    var teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen",]
+
+    setInterval(() => {
+        let d = new Date()
+        if (d.getHours() >= 0 && d.getHours() <= 11) {
+            document.getElementById("dayBit").innerText = "morning"
+        }
+        if (d.getHours() >= 12 && d.getHours() < 18) {
+            document.getElementById("dayBit").innerText = "afternoon"
+        }
+        if (d.getHours() >= 18) {
+            document.getElementById("dayBit").innerText = "evening"
+        }
+        var time = hours[d.getHours()]
+        if (d.getMinutes() > 30) {
+            time = hours[(d.getHours() + 1) % 24]
+            time = minutesToString(60 - d.getMinutes()) + ` minute${(60 - d.getMinutes() == 1) ? "" : "s"} to ` + time
+        } else if (d.getMinutes() == 0) {
+            time = "exactly " + time
+        } else {
+            time = minutesToString(d.getMinutes()) + ` minute${(60 - d.getMinutes() == 1) ? "" : "s"} past ` + time
+        }
+        document.getElementById("time").innerText = time
+    }, 30)
+
+    function minutesToString(minutes) {
+        console.log(minutes)
+        if (minutes < 10) {
+            return ones[minutes - 1]
+        } else if (minutes >= 10 && minutes < 20) {
+            return teens[minutes - 10]
+        } else if (minutes == 20) {
+            return "twenty"
+        } else if (minutes == 30) {
+            return "thirty"
+        } else {
+            return "twenty-" + ones[minutes - 21]
+        }
+
+    }
+    /*
+    minutes > 30 : x to hour + 1
+    minutes <= 30: x past hour
+    0 - midnight
+    1 - 1
+    2 - 2
+    ...
+    12 - noon
+
+    */
+</script>
